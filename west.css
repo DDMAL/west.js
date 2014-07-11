@@ -1,0 +1,48 @@
+.navbar-default{
+    margin-bottom:0em;
+}
+#four-square-container{
+    width:500px;
+    height:500px;
+    border: thin black solid;
+    margin:auto;
+    position:relative;
+}
+.inner-square{
+    display:inline;
+    position:absolute;
+    border:thin black solid;
+    min-width:50%;
+    min-height:50%;
+    max-width:50%;
+    max-height:50%;
+ }
+ #four-square-ul{
+    top:0px;
+    left:0px;
+ }
+ #four-square-ur{
+    top:0px;
+    left:250px;
+ }
+ #four-square-ll{
+    top:250px;
+    left:0px;
+ }
+ #four-square-lr{
+    top:250px;
+    left:250px;
+ }
+ .box-number{
+    font-size:32pt;
+    position:absolute;
+    right:0px;
+    bottom:0px;
+    margin:5px;
+ }
+ #debug{
+    width:500px;
+    height:200px;
+    margin:auto;
+    border:thin black solid;
+ }
