@@ -1,0 +1,3 @@
+[submodule "mei.js"]
+	path = mei.js
+	url = git@github.com:DDMAL/west.js.git
