@@ -1,3 +1,40 @@
+function createBoxWorker(boxNumber, type)
+{
+    //create a webworker
+    var boxWorker = new Worker("boxWorker.js");
+    /*
+        This is an easy addition to the asynchronicity aspect. We add a 
+        "boxNumber" property to the helloWorker object so that it can be
+        accessed when the worker posts a message, making sure that the
+        same variables for other sibling webworkers do not get overwritten.
+
+        This could just as easily be placed as a unique value of an array
+        or JSON object, but it's a fun trick with WebWorkers.
+    */
+
+    $.extend(boxWorker, {'boxNumber': boxNumber});
+
+    /*
+        WebWorkers deal with the "event" message. The JavaScript event 
+        'message' is used to communicate with a WebWorker, in both 
+        directions. Assigning an onmessage event to the variable in the
+        worker's "parent" script functions as a handler when the worker 
+        calls postMessage.
+    */
+    boxWorker.onmessage = function(e){
+        //put the data as the innerHTML of the specific box
+        $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data);
+    };
+
+    /*
+        To communicate with the worker and to pass it information, send
+        it an array of data. It needs to be an array/JSON object, but
+        your custom onmessage listener inside the worker can handle it
+        as you desire. This can be sent multiple times.
+    */
+    boxWorker.postMessage({'whatType': type, 'toWhom': boxNumber});
+}
+
 $(document).on('ready', function(){
     //a list of box numbers present on the page
     var boxNumArr = [1, 2, 3, 4];
@@ -14,43 +51,10 @@ $(document).on('ready', function(){
     $("#sendHelloModal-primary").on('click', function(){
         //close the dropdown
         $("#sendHelloModal-close").trigger('click');
-
-        //create a WebWorker based off a javascript file
-        var helloWorker = new Worker("helloWorld.js");
         //grab the selected box number
         var boxNumber = $("#selectSendHello").find(":selected").text();
+        createBoxWorker(boxNumber, "hello");
 
-        /*
-            This is an easy addition to the asynchronicity aspect. We add a 
-            "boxNumber" property to the helloWorker object so that it can be
-            accessed when the worker posts a message, making sure that the
-            same variables for other sibling webworkers do not get overwritten.
-
-            This could just as easily be placed as a unique value of an array
-            or JSON object, but it's a fun trick with WebWorkers.
-        */
-
-        $.extend(helloWorker, {'boxNumber': boxNumber});
-
-        /*
-            WebWorkers deal with the "event" message. The JavaScript event 
-            'message' is used to communicate with a WebWorker, in both 
-            directions. Assigning an onmessage event to the variable in the
-            worker's "parent" script functions as a handler when the worker 
-            calls postMessage.
-        */
-        helloWorker.onmessage = function(e){
-            //put the data as the innerHTML of the specific box
-            $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data);
-        };
-
-        /*
-            To communicate with the worker and to pass it information, send
-            it an array of data. It needs to be an array for some reason, but
-            your custom onmessage listener inside the worker can handle it
-            as you desire.
-        */
-        helloWorker.postMessage([boxNumber]);
     });
 
 
@@ -62,15 +66,8 @@ $(document).on('ready', function(){
     
     $("#calcFactModal-primary").on('click', function(){
         $("#calcFactModal-close").trigger('click');
-        var helloWorker = new Worker("calcFact.js");
         var boxNumber = $("#selectCalcFact").find(":selected").text();
-
-        $.extend(helloWorker, {'boxNumber': boxNumber});
-
-        helloWorker.onmessage = function(e){
-            $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data);
-        };
-        helloWorker.postMessage([boxNumber]);
+        createBoxWorker(boxNumber, "calc");
     });
 });
 
