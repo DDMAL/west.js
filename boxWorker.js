@@ -20,7 +20,7 @@ this.onmessage = function(event){
             break;
 
         default:
-            postMessage("I didn't understand that, sorry.");
+            postMessage({'whatType': 'append', 'content':"I didn't understand that, sorry."});
             break;
     }
 };
@@ -31,20 +31,20 @@ this.onmessage = function(event){
     This does need to be an array and can be send multiple times.
 */
 function sayHello(toWhom) {
-    postMessage("This is box number " + toWhom + " saying hello, world!");
+    postMessage({'whatType': 'replace', 'content': "This is box number " + toWhom + " saying hello, world!"});
 }
 
 function calcPointless(toWhom) {
     var SIZE = 1000000;
     var iteration = 100;
 
-    postMessage("I am box number " + toWhom + " and I am starting some rather pointless calculations.");
+    postMessage({'whatType': 'replace', 'content': "I am box number " + toWhom + " and I am starting some rather pointless calculations."});
     
     for (var i = 0; i < iteration; i++)
     {
         if((i % 10 === 0) && (i > 0))
         {
-            postMessage("I have finished " + i + " rounds of pointless calculations.");
+            postMessage({'whatType': 'append', 'content': " " + i + " rounds done."});
         }
 
         var a = new Array(SIZE);
@@ -61,5 +61,5 @@ function calcPointless(toWhom) {
             c[j] = Math.cos(a[j]);
         }
     }
-    postMessage("I have completely finished my pointless calculations.");
+    postMessage({'whatType': 'replace', 'content':"I have completely finished my pointless calculations."});
 }

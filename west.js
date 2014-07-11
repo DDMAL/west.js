@@ -22,8 +22,16 @@ function createBoxWorker(boxNumber, type)
         calls postMessage.
     */
     boxWorker.onmessage = function(e){
-        //put the data as the innerHTML of the specific box
-        $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data);
+        if(e.data.whatType == "append")
+        {
+            //put the data as the innerHTML of the specific box
+            $($(".inner-square")[this.boxNumber - 1]).children(".box-text").append(e.data.content);
+        }
+        else if(e.data.whatType == "replace")
+        {
+            //put the data as the innerHTML of the specific box
+            $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data.content);
+        }
     };
 
     /*
@@ -41,9 +49,14 @@ $(document).on('ready', function(){
 
     //make a modal
     createModal("body", "sendHelloModal", true, 
-        "Send 'Hello, World!' to box:<br>"+
-        createSelect('SendHello', boxNumArr, true), 
+        "Send 'Hello, World!' to box:<br><div id='sendHelloSelects'>" +
+        createSelect('SendHello', boxNumArr, true) +
+        "</div><button id='sendHelloSelectAdd'>Add another</button>", 
     "Send");
+
+    $("#sendHelloSelectAdd").on('click', function(){
+        $("#sendHelloSelects").append("<br>" + createSelect('SendHello', boxNumArr, true));
+    });
 
     //spawn the modal when the navbar dropdown item is clicked
     $("#sendHelloBar").on('click', function(){$('#sendHelloModal').modal();});
@@ -51,23 +64,61 @@ $(document).on('ready', function(){
     $("#sendHelloModal-primary").on('click', function(){
         //close the dropdown
         $("#sendHelloModal-close").trigger('click');
-        //grab the selected box number
-        var boxNumber = $("#selectSendHello").find(":selected").text();
-        createBoxWorker(boxNumber, "hello");
+        //grab the selected box number(s)
+        var selectLength = $(".selectSendHello").length;
+        var toSendArr = [];
+        while(selectLength--)
+        {
+            var newNum = $($(".selectSendHello")[selectLength]).find(":selected").text();
+            if(toSendArr.indexOf(newNum) === -1)
+            {
+                toSendArr.push(newNum);
+            }
+        }
+        var boxNumber = $(".selectSendHello").find(":selected").text();
 
+        var toSendLength = toSendArr.length;
+        while(toSendLength--)
+        { 
+            createBoxWorker(toSendArr[toSendLength], "hello");
+        }
+        $("#sendHelloSelects").html(createSelect('SendHello', boxNumArr, true));
     });
 
 
     createModal("body", "calcFactModal", true, 
-        "Do some pointless calculations with box:<br>"+
-        createSelect('CalcFact', boxNumArr, true), 
+        "Do some pointless calculations with box:<br><div id='calcFactSelects'>" +
+        createSelect('CalcFact', boxNumArr, true) +
+        "</div><button id='calcFactSelectAdd'>Add another</button>", 
     "Send");
+
+    $("#calcFactSelectAdd").on('click', function(){
+        $("#calcFactSelects").append("<br>" + createSelect('CalcFact', boxNumArr, true));
+    });
+
     $("#calcFactBar").on('click', function(){$('#calcFactModal').modal();});
     
-    $("#calcFactModal-primary").on('click', function(){
+    $("#calcFactModal-primary").on('click', function(){        //close the dropdown
         $("#calcFactModal-close").trigger('click');
-        var boxNumber = $("#selectCalcFact").find(":selected").text();
-        createBoxWorker(boxNumber, "calc");
+        //grab the selected box number
+        var selectLength = $(".selectCalcFact").length;
+        var toSendArr = [];
+        while(selectLength--)
+        {
+            var newNum = $($(".selectCalcFact")[selectLength]).find(":selected").text();
+            if(toSendArr.indexOf(newNum) === -1)
+            {
+                toSendArr.push(newNum);
+            }
+        }
+        var boxNumber = $(".selectCalcFact").find(":selected").text();
+
+        var toSendLength = toSendArr.length;
+        while(toSendLength--)
+        { 
+            createBoxWorker(toSendArr[toSendLength], "calc");
+        }
+        $("#calcFactSelects").html(createSelect('CalcFact', boxNumArr, true));
     });
 });
 
@@ -109,7 +160,7 @@ createModal = function(toAppendTo, modalID, small, modalBody, primaryTitle)
 */
 createSelect = function(idAppend, jsonObject, isArr)
 {
-    var retString = "<select id='select" + idAppend + "'>";
+    var retString = "<select class='select" + idAppend + "'>";
 
     for (curKeyIndex in jsonObject)
     {
