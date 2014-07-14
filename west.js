@@ -193,7 +193,7 @@ createSelect = function(idAppend, jsonObject, isArr)
 {
     var retString = "<select class='select" + idAppend + "'>";
 
-    for (curKeyIndex in jsonObject)
+    for (var curKeyIndex in jsonObject)
     {
         var curKey = (isArr ? jsonObject[curKeyIndex] : curKeyIndex);
         retString += "<option name='" + curKey + "'>" + curKey + "</option>";
