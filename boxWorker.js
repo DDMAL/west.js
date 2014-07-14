@@ -19,6 +19,12 @@ this.onmessage = function(event){
             calcPointless(event.data.toWhom);
             break;
 
+        case "clear":
+            clear();
+            // Closes a WebWorker process
+            self.close();
+            break;
+
         default:
             postMessage({'whatType': 'append', 'content':"I didn't understand that, sorry."});
             break;
@@ -30,6 +36,10 @@ this.onmessage = function(event){
     the onMessage listener you declared in the parent script. 
     This does need to be an array and can be send multiple times.
 */
+function clear(toWhom) {
+    postMessage({'whatType': 'replace', 'content': ''});
+}
+
 function sayHello(toWhom) {
     postMessage({'whatType': 'replace', 'content': "This is box number " + toWhom + " saying hello, world!"});
 }

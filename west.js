@@ -43,6 +43,16 @@ function createBoxWorker(boxNumber, type)
     boxWorker.postMessage({'whatType': type, 'toWhom': boxNumber});
 }
 
+function clearAllBoxes()
+{
+    var i = 4;
+
+    while (i--)
+    {
+        createBoxWorker(i, 'clear');
+    }
+}
+
 $(document).on('ready', function(){
     //a list of box numbers present on the page
     var boxNumArr = [1, 2, 3, 4];
@@ -133,6 +143,14 @@ $(document).on('ready', function(){
 
         $("#calcFactSelects").html(createSelect('CalcFact', boxNumArr, true));
     });
+
+    //Clear all boxes
+    mei.Events.subscribe('ClearButtonDidActivate', clearAllBoxes);
+
+    $("#clearBoxesBar").on('click', function()
+                         {
+                             mei.Events.publish('ClearButtonDidActivate');
+                         });
 });
 
 /*
