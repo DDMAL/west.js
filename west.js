@@ -78,13 +78,23 @@ $(document).on('ready', function(){
         var boxNumber = $(".selectSendHello").find(":selected").text();
 
         var toSendLength = toSendArr.length;
+
+    /*
+        To subscribe a worker to an event, call mei.Events.subscribe('eventTopic', callback, [arguments])
+        (See mei.js/mei.js for details)
+    */
         while(toSendLength--)
         { 
-            createBoxWorker(toSendArr[toSendLength], "hello");
+            mei.Events.subscribe('HelloEvent', createBoxWorker, [toSendArr[toSendLength], 'hello']);
         }
+
+    /*
+        Trigger an event using mei.Events.publish('eventTopic')
+    */
+        mei.Events.publish('HelloEvent');
+
         $("#sendHelloSelects").html(createSelect('SendHello', boxNumArr, true));
     });
-
 
     createModal("body", "calcFactModal", true, 
         "Do some pointless calculations with box:<br><div id='calcFactSelects'>" +
@@ -116,8 +126,11 @@ $(document).on('ready', function(){
         var toSendLength = toSendArr.length;
         while(toSendLength--)
         { 
-            createBoxWorker(toSendArr[toSendLength], "calc");
+            mei.Events.subscribe('CalculateEvent', createBoxWorker, [toSendArr[toSendLength], 'calc']);
         }
+
+        mei.Events.publish('CalculateEvent');
+
         $("#calcFactSelects").html(createSelect('CalcFact', boxNumArr, true));
     });
 });
