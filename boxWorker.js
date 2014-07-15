@@ -6,7 +6,7 @@ console.log("A box has been loaded!");
 
 /*
     Add an onmessage event listener to receive information sent via
-    postMessage from the parent, and have it call functions or code 
+    postMessage from the parent, and have it call functions or code
     contained within the worker.
 */
 this.onmessage = function(event){
@@ -49,7 +49,7 @@ function calcPointless(toWhom) {
     var iteration = 100;
 
     postMessage({'whatType': 'replace', 'content': "I am box number " + toWhom + " and I am starting some rather pointless calculations."});
-    
+
     for (var i = 0; i < iteration; i++)
     {
         if((i % 10 === 0) && (i > 0))
@@ -62,9 +62,9 @@ function calcPointless(toWhom) {
         var c = new Array(SIZE);
 
 
-        for (var k = 0; k < SIZE; k++) { 
-            a[i] = Math.random();   
-            b[i] = Math.random();   
+        for (var k = 0; k < SIZE; k++) {
+            a[i] = Math.random();
+            b[i] = Math.random();
         }
         for (var j = 0; j < SIZE; j++)
         {

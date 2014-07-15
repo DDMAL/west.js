@@ -1,9 +1,12 @@
+// store instances of webWorkers in an array
+var workers = [];
+
 function createBoxWorker(boxNumber, type)
 {
     //create a webworker
     var boxWorker = new Worker("boxWorker.js");
     /*
-        This is an easy addition to the asynchronicity aspect. We add a 
+        This is an easy addition to the asynchronicity aspect. We add a
         "boxNumber" property to the helloWorker object so that it can be
         accessed when the worker posts a message, making sure that the
         same variables for other sibling webworkers do not get overwritten.
@@ -15,10 +18,10 @@ function createBoxWorker(boxNumber, type)
     $.extend(boxWorker, {'boxNumber': boxNumber});
 
     /*
-        WebWorkers deal with the "event" message. The JavaScript event 
-        'message' is used to communicate with a WebWorker, in both 
+        WebWorkers deal with the "event" message. The JavaScript event
+        'message' is used to communicate with a WebWorker, in both
         directions. Assigning an onmessage event to the variable in the
-        worker's "parent" script functions as a handler when the worker 
+        worker's "parent" script functions as a handler when the worker
         calls postMessage.
     */
     boxWorker.onmessage = function(e){
@@ -58,10 +61,10 @@ $(document).on('ready', function(){
     var boxNumArr = [1, 2, 3, 4];
 
     //make a modal
-    createModal("body", "sendHelloModal", true, 
+    createModal("body", "sendHelloModal", true,
         "Send 'Hello, World!' to box:<br><div id='sendHelloSelects'>" +
         createSelect('SendHello', boxNumArr, true) +
-        "</div><button id='sendHelloSelectAdd'>Add another</button>", 
+        "</div><button id='sendHelloSelectAdd'>Add another</button>",
     "Send");
 
     $("#sendHelloSelectAdd").on('click', function(){
@@ -94,7 +97,7 @@ $(document).on('ready', function(){
         (See mei.js/mei.js for details)
     */
         while(toSendLength--)
-        { 
+        {
             mei.Events.subscribe('HelloEvent', createBoxWorker, [toSendArr[toSendLength], 'hello']);
         }
 
@@ -106,10 +109,10 @@ $(document).on('ready', function(){
         $("#sendHelloSelects").html(createSelect('SendHello', boxNumArr, true));
     });
 
-    createModal("body", "calcFactModal", true, 
+    createModal("body", "calcFactModal", true,
         "Do some pointless calculations with box:<br><div id='calcFactSelects'>" +
         createSelect('CalcFact', boxNumArr, true) +
-        "</div><button id='calcFactSelectAdd'>Add another</button>", 
+        "</div><button id='calcFactSelectAdd'>Add another</button>",
     "Send");
 
     $("#calcFactSelectAdd").on('click', function(){
@@ -117,7 +120,7 @@ $(document).on('ready', function(){
     });
 
     $("#calcFactBar").on('click', function(){$('#calcFactModal').modal();});
-    
+
     $("#calcFactModal-primary").on('click', function(){        //close the dropdown
         $("#calcFactModal-close").trigger('click');
         //grab the selected box number
@@ -135,7 +138,7 @@ $(document).on('ready', function(){
 
         var toSendLength = toSendArr.length;
         while(toSendLength--)
-        { 
+        {
             mei.Events.subscribe('CalculateEvent', createBoxWorker, [toSendArr[toSendLength], 'calc']);
         }
 
@@ -154,10 +157,10 @@ $(document).on('ready', function(){
 });
 
 /*
----------------------------- Bootstrap-bootstrapping functions follow ---------------------------- 
+---------------------------- Bootstrap-bootstrapping functions follow ----------------------------
 */
 
-/* 
+/*
     Shorthand function for creating a bootstrap modal.
     @param toAppendTo jQuery selector for an element to append the modal to.
     @param modalID String for a unique identifier for the modal
