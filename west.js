@@ -116,7 +116,6 @@ $(document).on('ready', function(){
         {
             if (handlers[j] && handlers[j][0] === 'HelloEvent')
             {
-                console.log('unsub block entered for ' + handlers[j][2]);
                 mei.Events.unsubscribe(handlers[j]);
                 handlers[j] = null;
             }
@@ -130,7 +129,6 @@ $(document).on('ready', function(){
         while (toSendLength--)
         {
             var w = toSendArr[toSendLength];
-            console.log('w = ' + w);
 
             handlers[w - 1] = mei.Events.subscribe('HelloEvent', createBoxWorker, [w, 'hello']);
         }
@@ -175,7 +173,6 @@ $(document).on('ready', function(){
         {
             if (handlers[j] && handlers[j][0] === 'CalculateEvent')
             {
-                console.log('unsub block entered for ' + handlers[j][2]);
                 mei.Events.unsubscribe(handlers[j]);
                 handlers[j] = null;
             }
