@@ -25,12 +25,12 @@ function createBoxWorker(boxNumber, type)
         calls postMessage.
     */
     boxWorker.onmessage = function(e){
-        if(e.data.whatType == "append")
+        if (e.data.whatType == "append")
         {
             //put the data as the innerHTML of the specific box
             $($(".inner-square")[this.boxNumber - 1]).children(".box-text").append(e.data.content);
         }
-        else if(e.data.whatType == "replace")
+        else if (e.data.whatType == "replace")
         {
             //put the data as the innerHTML of the specific box
             $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data.content);
@@ -80,10 +80,10 @@ $(document).on('ready', function(){
         //grab the selected box number(s)
         var selectLength = $(".selectSendHello").length;
         var toSendArr = [];
-        while(selectLength--)
+        while (selectLength--)
         {
             var newNum = $($(".selectSendHello")[selectLength]).find(":selected").text();
-            if(toSendArr.indexOf(newNum) === -1)
+            if (toSendArr.indexOf(newNum) === -1)
             {
                 toSendArr.push(newNum);
             }
@@ -96,7 +96,7 @@ $(document).on('ready', function(){
         To subscribe a worker to an event, call mei.Events.subscribe('eventTopic', callback, [arguments])
         (See mei.js/mei.js for details)
     */
-        while(toSendLength--)
+        while (toSendLength--)
         {
             mei.Events.subscribe('HelloEvent', createBoxWorker, [toSendArr[toSendLength], 'hello']);
         }
@@ -126,10 +126,10 @@ $(document).on('ready', function(){
         //grab the selected box number
         var selectLength = $(".selectCalcFact").length;
         var toSendArr = [];
-        while(selectLength--)
+        while (selectLength--)
         {
             var newNum = $($(".selectCalcFact")[selectLength]).find(":selected").text();
-            if(toSendArr.indexOf(newNum) === -1)
+            if (toSendArr.indexOf(newNum) === -1)
             {
                 toSendArr.push(newNum);
             }
@@ -137,7 +137,7 @@ $(document).on('ready', function(){
         var boxNumber = $(".selectCalcFact").find(":selected").text();
 
         var toSendLength = toSendArr.length;
-        while(toSendLength--)
+        while (toSendLength--)
         {
             mei.Events.subscribe('CalculateEvent', createBoxWorker, [toSendArr[toSendLength], 'calc']);
         }
