@@ -2,9 +2,33 @@
 var workers = [null, null, null, null];
 var handlers = [null, null, null, null];
 
+function clearBox(boxNum)
+{
+    var boxIndex = boxNum - 1;
+
+    if (workers[boxIndex])
+    {
+        workers[boxIndex].terminate();
+        workers[boxIndex] = null;
+    }
+    // clear the corresponding DOM element
+    $('#box-' + boxNum + ' > .box-text').html('');
+}
+
+function clearAllBoxes()
+{
+    var i = workers.length;
+
+    while (i--)
+    {
+        clearBox(i + 1);
+    }
+}
 
 function createBoxWorker(boxNumber, type)
 {
+    clearBox(boxNumber);
+
     //create a webworker
     var boxWorker = new Worker("boxWorker.js");
     /*
@@ -46,16 +70,7 @@ function createBoxWorker(boxNumber, type)
         as you desire. This can be sent multiple times.
     */
     boxWorker.postMessage({'whatType': type, 'toWhom': boxNumber});
-}
 
-function clearAllBoxes()
-{
-    var i = 4;
-
-    while (i--)
-    {
-        createBoxWorker(i, 'clear');
-    }
     workers[boxNumber - 1] = boxWorker;
 }
 
