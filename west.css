@@ -4,8 +4,7 @@
 #four-square-container{
     width:500px;
     height:500px;
-    border: thin black solid;
-    margin:auto;
+    margin: 10px auto;
     position:relative;
 }
 .inner-square{
@@ -17,19 +16,19 @@
     max-width:50%;
     max-height:50%;
  }
- #four-square-ul{
+ #box-1 {
     top:0px;
     left:0px;
  }
- #four-square-ur{
+ #box-2 {
     top:0px;
     left:250px;
  }
- #four-square-ll{
+ #box-3 {
     top:250px;
     left:0px;
  }
- #four-square-lr{
+ #box-4 {
     top:250px;
     left:250px;
  }
