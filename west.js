@@ -1,5 +1,7 @@
 // store instances of webWorkers in an array
-var workers = [];
+var workers = [null, null, null, null];
+var handlers = [null, null, null, null];
+
 
 function createBoxWorker(boxNumber, type)
 {
@@ -54,6 +56,7 @@ function clearAllBoxes()
     {
         createBoxWorker(i, 'clear');
     }
+    workers[boxNumber - 1] = boxWorker;
 }
 
 $(document).on('ready', function(){
@@ -92,13 +95,29 @@ $(document).on('ready', function(){
 
         var toSendLength = toSendArr.length;
 
+        // first, make sure no boxes are still subscribed to this event
+        var j = handlers.length;
+        while (j--)
+        {
+            if (handlers[j] && handlers[j][0] === 'HelloEvent')
+            {
+                console.log('unsub block entered for ' + handlers[j][2]);
+                mei.Events.unsubscribe(handlers[j]);
+                handlers[j] = null;
+            }
+        }
+
     /*
         To subscribe a worker to an event, call mei.Events.subscribe('eventTopic', callback, [arguments])
+        Here, we also store event handlers in an array.
         (See mei.js/mei.js for details)
     */
         while (toSendLength--)
         {
-            mei.Events.subscribe('HelloEvent', createBoxWorker, [toSendArr[toSendLength], 'hello']);
+            var w = toSendArr[toSendLength];
+            console.log('w = ' + w);
+
+            handlers[w - 1] = mei.Events.subscribe('HelloEvent', createBoxWorker, [w, 'hello']);
         }
 
     /*
@@ -136,10 +155,23 @@ $(document).on('ready', function(){
         }
         var boxNumber = $(".selectCalcFact").find(":selected").text();
 
+        var j = handlers.length;
+        while (j--)
+        {
+            if (handlers[j] && handlers[j][0] === 'CalculateEvent')
+            {
+                console.log('unsub block entered for ' + handlers[j][2]);
+                mei.Events.unsubscribe(handlers[j]);
+                handlers[j] = null;
+            }
+        }
+
         var toSendLength = toSendArr.length;
         while (toSendLength--)
         {
-            mei.Events.subscribe('CalculateEvent', createBoxWorker, [toSendArr[toSendLength], 'calc']);
+            var w = toSendArr[toSendLength];
+
+            handlers[w - 1] = mei.Events.subscribe('CalculateEvent', createBoxWorker, [w, 'calc']);
         }
 
         mei.Events.publish('CalculateEvent');
