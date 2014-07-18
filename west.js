@@ -114,7 +114,7 @@ $(document).on('ready', function(){
         var j = handlers.length;
         while (j--)
         {
-            if (handlers[j] && handlers[j][0] === 'HelloEvent')
+            if (handlers[j])
             {
                 mei.Events.unsubscribe(handlers[j]);
                 handlers[j] = null;
@@ -171,7 +171,7 @@ $(document).on('ready', function(){
         var j = handlers.length;
         while (j--)
         {
-            if (handlers[j] && handlers[j][0] === 'CalculateEvent')
+            if (handlers[j])
             {
                 mei.Events.unsubscribe(handlers[j]);
                 handlers[j] = null;
