@@ -27,51 +27,73 @@ function clearAllBoxes()
 
 function createBoxWorker(boxNumber, type)
 {
-    clearBox(boxNumber);
+    var boxIndex = boxNumber - 1;
+    var boxWorker;
 
-    //create a webworker
-    var boxWorker = new Worker("boxWorker.js");
-    /*
-        This is an easy addition to the asynchronicity aspect. We add a
-        "boxNumber" property to the helloWorker object so that it can be
-        accessed when the worker posts a message, making sure that the
-        same variables for other sibling webworkers do not get overwritten.
+    if (workers[boxIndex])
+    {
+        //if there's a Worker for given box here already, just add task to its queue
+        boxWorker = workers[boxIndex];
+        boxWorker.postMessage({'whatType': type, 'toWhom': boxNumber});
+    }
+    else
+    {
+        //create a webworker
+        boxWorker = new Worker("boxWorker.js");
+        /*
+            This is an easy addition to the asynchronicity aspect. We add a
+            "boxNumber" property to the helloWorker object so that it can be
+            accessed when the worker posts a message, making sure that the
+            same variables for other sibling webworkers do not get overwritten.
 
-        This could just as easily be placed as a unique value of an array
-        or JSON object, but it's a fun trick with WebWorkers.
-    */
+            This could just as easily be placed as a unique value of an array
+            or JSON object, but it's a fun trick with WebWorkers.
+        */
 
-    $.extend(boxWorker, {'boxNumber': boxNumber});
+        $.extend(boxWorker, {'boxNumber': boxNumber});
 
-    /*
-        WebWorkers deal with the "event" message. The JavaScript event
-        'message' is used to communicate with a WebWorker, in both
-        directions. Assigning an onmessage event to the variable in the
-        worker's "parent" script functions as a handler when the worker
-        calls postMessage.
-    */
-    boxWorker.onmessage = function(e){
-        if (e.data.whatType == "append")
-        {
-            //put the data as the innerHTML of the specific box
-            $($(".inner-square")[this.boxNumber - 1]).children(".box-text").append(e.data.content);
-        }
-        else if (e.data.whatType == "replace")
-        {
-            //put the data as the innerHTML of the specific box
-            $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data.content);
-        }
-    };
+        /*
+            WebWorkers deal with the "event" message. The JavaScript event
+            'message' is used to communicate with a WebWorker, in both
+            directions. Assigning an onmessage event to the variable in the
+            worker's "parent" script functions as a handler when the worker
+            calls postMessage.
+        */
+        boxWorker.onmessage = function(e){
+            if (e.data.whatType == "append")
+            {
+                //put the data as the innerHTML of the specific box
+                $($(".inner-square")[this.boxNumber - 1]).children(".box-text").append(e.data.content);
+            }
+            else if (e.data.whatType == "replace")
+            {
+                //put the data as the innerHTML of the specific box
+                $($(".inner-square")[this.boxNumber - 1]).children(".box-text").html(e.data.content);
+            }
+            else if (e.data.whatType == "log")
+            {
+                //append the message to the DOM console
+                $('#debug').append('<p>' + e.data.content + '</p>');
+                var objDiv = document.getElementById('debug');
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+            else if (e.data.whatType == "done")
+            {
+                //terminate a boxWorker when its tasks have finished
+                workers[boxIndex] = null;
+            }
+        };
 
-    /*
-        To communicate with the worker and to pass it information, send
-        it an array of data. It needs to be an array/JSON object, but
-        your custom onmessage listener inside the worker can handle it
-        as you desire. This can be sent multiple times.
-    */
-    boxWorker.postMessage({'whatType': type, 'toWhom': boxNumber});
+        /*
+            To communicate with the worker and to pass it information, send
+            it an array of data. It needs to be an array/JSON object, but
+            your custom onmessage listener inside the worker can handle it
+            as you desire. This can be sent multiple times.
+        */
+        boxWorker.postMessage({'whatType': type, 'toWhom': boxNumber});
 
-    workers[boxNumber - 1] = boxWorker;
+        workers[boxNumber - 1] = boxWorker;
+    }
 }
 
 $(document).on('ready', function(){
@@ -83,7 +105,7 @@ $(document).on('ready', function(){
         "Send 'Hello, World!' to box:<br><div id='sendHelloSelects'>" +
         createSelect('SendHello', boxNumArr, true) +
         "</div><button id='sendHelloSelectAdd'>Add another</button>",
-    "Send");
+        "Send");
 
     $("#sendHelloSelectAdd").on('click', function(){
         $("#sendHelloSelects").append("<br>" + createSelect('SendHello', boxNumArr, true));

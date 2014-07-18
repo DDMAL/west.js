@@ -8,20 +8,23 @@
     postMessage from the parent, and have it call functions or code
     contained within the worker.
 */
+var taskQueue = [];
+
 this.onmessage = function(event){
     switch(event.data.whatType){
         case "hello":
-            sayHello(event.data.toWhom);
+            taskQueue.push([sayHello, event.data.toWhom]);
             break;
 
         case "calc":
-            calcPointless(event.data.toWhom);
+            taskQueue.push([calcPointless, event.data.toWhom]);
             break;
 
         default:
             postMessage({'whatType': 'append', 'content':"I didn't understand that, sorry."});
             break;
     }
+    runTasks();
 };
 
 /*
@@ -30,11 +33,26 @@ this.onmessage = function(event){
     This does need to be an array and can be send multiple times.
 */
 
-function sayHello(toWhom) {
-    postMessage({'whatType': 'replace', 'content': "This is box number " + toWhom + " saying hello, world!"});
+// loop through functions in the queue, executing them with specified arguments
+function runTasks()
+{
+    var fn;
+    while (taskQueue.length > 0)
+    {
+        fn = taskQueue.shift();
+        fn[0].apply(this, [fn[1]]);
+        postMessage({'whatType': 'log', 'content': 'Box ' + fn[1] + ' finished executing ' + fn[0].name});
+    }
+    postMessage({'whatType': 'done', 'content': this.boxNumber});
 }
 
-function calcPointless(toWhom) {
+function sayHello(toWhom)
+{
+    postMessage({'whatType': 'replace', 'content': "This is box number " + toWhom + " saying hello, world" });
+}
+
+function calcPointless(toWhom)
+{
     var SIZE = 1000000;
     var iteration = 100;
 
