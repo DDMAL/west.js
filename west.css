@@ -39,8 +39,13 @@
     bottom:0px;
     margin:5px;
 }
+#debug{
     width:500px;
     height:200px;
     margin:auto;
     border:thin black solid;
- }
+    overflow: auto;
+}
+#debug p {
+    margin: 0;
+}
