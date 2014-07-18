@@ -2,7 +2,6 @@
     This code runs automatically once the file is loaded as a worker.
     Keep in mind that jQuery ($) and document are not accessible here.
 */
-console.log("A box has been loaded!");
 
 /*
     Add an onmessage event listener to receive information sent via
