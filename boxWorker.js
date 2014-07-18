@@ -48,7 +48,7 @@ function runTasks()
 
 function sayHello(toWhom)
 {
-    postMessage({'whatType': 'replace', 'content': "This is box number " + toWhom + " saying hello, world" });
+    postMessage({'whatType': 'replace', 'content': "This is box number " + toWhom + " saying hello, world!" });
 }
 
 function calcPointless(toWhom)
