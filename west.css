@@ -15,31 +15,30 @@
     min-height:50%;
     max-width:50%;
     max-height:50%;
- }
- #box-1 {
+}
+#box-1 {
     top:0px;
     left:0px;
- }
- #box-2 {
+}
+#box-2 {
     top:0px;
     left:250px;
- }
- #box-3 {
+}
+#box-3 {
     top:250px;
     left:0px;
- }
- #box-4 {
+}
+#box-4 {
     top:250px;
     left:250px;
- }
- .box-number{
+}
+.box-number{
     font-size:32pt;
     position:absolute;
     right:0px;
     bottom:0px;
     margin:5px;
- }
- #debug{
+}
     width:500px;
     height:200px;
     margin:auto;
