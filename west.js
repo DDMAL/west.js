@@ -138,7 +138,7 @@ $(document).on('ready', function(){
         {
             if (handlers[j])
             {
-                mei.Events.unsubscribe(handlers[j], true);
+                mei.Events.unsubscribe(handlers[j]);
                 handlers[j] = null;
             }
         }
@@ -195,7 +195,7 @@ $(document).on('ready', function(){
         {
             if (handlers[j])
             {
-                mei.Events.unsubscribe(handlers[j], true);
+                mei.Events.unsubscribe(handlers[j]);
                 handlers[j] = null;
             }
         }
